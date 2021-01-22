@@ -354,6 +354,7 @@ public class CommonRdbmsWriter {
                             preparedStatement, record);
                     preparedStatement.addBatch();
                 }
+                LOG.debug("preparedStatement = "+ preparedStatement.toString());
                 preparedStatement.executeBatch();
                 connection.commit();
             } catch (SQLException e) {

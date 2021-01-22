@@ -8,6 +8,7 @@ import com.alibaba.datax.plugin.rdbms.util.DBUtilErrorCode;
 import com.alibaba.datax.plugin.rdbms.util.DataBaseType;
 import com.alibaba.datax.plugin.rdbms.writer.CommonRdbmsWriter;
 import com.alibaba.datax.plugin.rdbms.writer.Key;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -23,10 +24,20 @@ public class PostgresqlWriter extends Writer {
 			this.originalConfig = super.getPluginJobConf();
 
 			// warn：not like mysql, PostgreSQL only support insert mode, don't use
+//			String writeMode = this.originalConfig.getString(Key.WRITE_MODE);
+//			if (null != writeMode) {
+//				throw DataXException.asDataXException(DBUtilErrorCode.CONF_ERROR,
+//					String.format("写入模式(writeMode)配置有误. 因为PostgreSQL不支持配置参数项 writeMode: %s, PostgreSQL仅使用insert sql 插入数据. 请检查您的配置并作出修改.", writeMode));
+//			}
+
+			//pg库的写入模式默认为update，插入的时候用的sql是upset方式
 			String writeMode = this.originalConfig.getString(Key.WRITE_MODE);
-			if (null != writeMode) {
-				throw DataXException.asDataXException(DBUtilErrorCode.CONF_ERROR,
-					String.format("写入模式(writeMode)配置有误. 因为PostgreSQL不支持配置参数项 writeMode: %s, PostgreSQL仅使用insert sql 插入数据. 请检查您的配置并作出修改.", writeMode));
+			if(StringUtils.isBlank(writeMode)){
+				this.originalConfig.set(Key.WRITE_MODE, "update");
+			}else{
+				if(!writeMode.contains("update")){
+					this.originalConfig.set(Key.WRITE_MODE, "update");
+				}
 			}
 
 			this.commonRdbmsWriterMaster = new CommonRdbmsWriter.Job(DATABASE_TYPE);
