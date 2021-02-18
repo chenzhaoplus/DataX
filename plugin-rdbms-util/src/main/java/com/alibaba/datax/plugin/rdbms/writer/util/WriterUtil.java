@@ -154,6 +154,10 @@ public final class WriterUtil {
     }
 
     public static String onConFlictDoString(String conflict, List<String> columnHolders) {
+        if(conflict.trim().toLowerCase().startsWith("insert")){
+            return "";
+        }
+
         conflict = conflict.replace("update", "");
         if(StringUtils.isBlank(conflict)){
             conflict = "(id)";

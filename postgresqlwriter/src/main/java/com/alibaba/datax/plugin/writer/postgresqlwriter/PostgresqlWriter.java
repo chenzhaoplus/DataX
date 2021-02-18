@@ -34,11 +34,12 @@ public class PostgresqlWriter extends Writer {
 			String writeMode = this.originalConfig.getString(Key.WRITE_MODE);
 			if(StringUtils.isBlank(writeMode)){
 				this.originalConfig.set(Key.WRITE_MODE, "update");
-			}else{
-				if(!writeMode.contains("update")){
-					this.originalConfig.set(Key.WRITE_MODE, "update");
-				}
 			}
+//			else{
+//				if(!writeMode.contains("update")){
+//					this.originalConfig.set(Key.WRITE_MODE, "update");
+//				}
+//			}
 
 			this.commonRdbmsWriterMaster = new CommonRdbmsWriter.Job(DATABASE_TYPE);
 			this.commonRdbmsWriterMaster.init(this.originalConfig);
